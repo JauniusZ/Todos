@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">YoYo's Todos</h1>
+    </div>
+    <form>
+      <input
+        type="text"
+        id="inputField"
+        name="inputField"
+        class="todos-input"
+        placeholder="Enter a todo"
+      />
+      <button type="submit" class="submit-btn">Submit</button>
+      <br />
+      <br />
+      <button id="clearCheckedTodosBtn" class="clear-btn">
+        Clear Checked Todos
+      </button>
+      <p class="todos-left">Todos left unchecked:</p>
+      <h2 class="todos-title">List of todos:</h2>
+      <ul class="todos-list"></ul>
+    </form>
+  </body>
+</html>
