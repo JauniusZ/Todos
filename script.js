@@ -1,6 +1,6 @@
 const form = document.getElementById("todoForm");
 const input = document.getElementById("inputField");
-const list = document.querySelector(".todos-list");
+const list = document.getElementById("list");
 
 form.addEventListener("submit", (event) => {
   console.log(event.target);
