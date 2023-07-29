@@ -11,6 +11,11 @@ form.addEventListener("submit", (event) => {
 
   todos.push({ title: title, checked: false });
 
+  renderTodos();
+  updateUncheckedTodoCount();
+});
+
+function renderTodos() {
   list.innerHTML = "";
 
   todos.forEach((todo, index) => {
@@ -31,9 +36,7 @@ form.addEventListener("submit", (event) => {
 
     list.appendChild(listItem);
   });
-
-  updateUncheckedTodoCount();
-});
+}
 
 function updateUncheckedTodoCount() {
   const uncheckedTodos = todos.filter((todo) => !todo.checked).length;
