@@ -1,7 +1,11 @@
 const form = document.getElementById("todoForm");
 const input = document.getElementById("inputField");
 const list = document.getElementById("list");
-const todos = [];
+
+const state = {
+  todos: [],
+  filter: "all",
+};
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -9,16 +13,34 @@ form.addEventListener("submit", (event) => {
   input.value = null;
   if (title === "") return;
 
-  todos.push({ title: title, checked: false });
+  state.todos.push({ title: title, checked: false });
 
   renderTodos();
   updateUncheckedTodoCount();
 });
 
+const filterInputs = document.getElementsByName("filters");
+filterInputs.forEach((input) => {
+  input.addEventListener("change", () => {
+    state.filter = input.value;
+    renderTodos();
+  });
+});
+
 function renderTodos() {
   list.innerHTML = "";
 
-  todos.forEach((todo, index) => {
+  let filteredTodos = [];
+
+  if (state.filter === "completed") {
+    filteredTodos = state.todos.filter((todo) => todo.checked);
+  } else if (state.filter === "not_completed") {
+    filteredTodos = state.todos.filter((todo) => !todo.checked);
+  } else {
+    filteredTodos = state.todos;
+  }
+
+  filteredTodos.forEach((todo, index) => {
     const listItem = document.createElement("li");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -30,7 +52,7 @@ function renderTodos() {
     listItem.appendChild(titleText);
 
     checkbox.addEventListener("change", () => {
-      todos[index].checked = checkbox.checked;
+      state.todos[index].checked = checkbox.checked;
       updateUncheckedTodoCount();
     });
 
@@ -39,7 +61,7 @@ function renderTodos() {
 }
 
 function updateUncheckedTodoCount() {
-  const uncheckedTodos = todos.filter((todo) => !todo.checked).length;
+  const uncheckedTodos = state.todos.filter((todo) => !todo.checked).length;
   const todosLeftElement = document.getElementById("todos-left");
   todosLeftElement.textContent = `Todos left unchecked: ${uncheckedTodos}`;
 }

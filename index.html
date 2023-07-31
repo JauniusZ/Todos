@@ -26,6 +26,20 @@
     </button>
     <p class="todos-left" id="todos-left">Todos left unchecked:</p>
     <h2 class="todos-title">List of todos:</h2>
+    <div id="filters" class="filters">
+      <span>
+        <input type="radio" name="filters" id="option1" value="all" />
+        <label for="option1">All</label>
+      </span>
+      <span>
+        <input type="radio" name="filters" id="option2" value="not_completed" />
+        <label for="option2">Not completed</label>
+      </span>
+      <span>
+        <input type="radio" name="filters" id="option3" value="completed" />
+        <label for="option3">Completed</label>
+      </span>
+    </div>
     <ul class="todos-list" id="list"></ul>
   </body>
 </html>
