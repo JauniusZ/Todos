@@ -65,18 +65,3 @@ function updateUncheckedTodoCount() {
   const todosLeftElement = document.getElementById("todos-left");
   todosLeftElement.textContent = `Todos left unchecked: ${uncheckedTodos}`;
 }
-
-function setFilter(filterValue) {
-  const filterRadioButton = document.getElementById(
-    `option${filterValue === "all" ? 1 : filterValue === "completed" ? 3 : 2}`
-  );
-  if (filterRadioButton) {
-    filterRadioButton.checked = true;
-    state.filter = filterValue;
-    renderTodos();
-  } else {
-    console.error("Invalid filter value provided.");
-  }
-}
-
-setFilter("all");
