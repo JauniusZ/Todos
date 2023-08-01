@@ -69,8 +69,7 @@ function updateUncheckedTodoCount() {
 document
   .getElementById("clearCheckedTodosBtn")
   .addEventListener("click", () => {
-    state.todos = state.todos.filter((todo) => !todo.checked);
+    state.todos = state.todos.filter(({ checked }) => !checked);
 
     renderTodos();
-    updateUncheckedTodoCount();
   });
