@@ -65,3 +65,11 @@ function updateUncheckedTodoCount() {
   const todosLeftElement = document.getElementById("todos-left");
   todosLeftElement.textContent = `Todos left unchecked: ${uncheckedTodos}`;
 }
+
+document
+  .getElementById("clearCheckedTodosBtn")
+  .addEventListener("click", () => {
+    state.todos = state.todos.filter(({ checked }) => !checked);
+
+    renderTodos();
+  });
