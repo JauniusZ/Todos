@@ -1,11 +1,16 @@
+const TODOS_SESSION_KEY = "todos";
+
+const storedTodos = JSON.parse(sessionStorage.getItem(TODOS_SESSION_KEY));
+const state = {
+  todos: storedTodos || [],
+  filter: "all",
+};
+
 const form = document.getElementById("todoForm");
 const input = document.getElementById("inputField");
 const list = document.getElementById("list");
 
-const state = {
-  todos: [],
-  filter: "all",
-};
+renderTodos();
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -17,6 +22,8 @@ form.addEventListener("submit", (event) => {
 
   renderTodos();
   updateUncheckedTodoCount();
+
+  sessionStorage.setItem(TODOS_SESSION_KEY, JSON.stringify(state.todos));
 });
 
 const filterInputs = document.getElementsByName("filters");
@@ -30,7 +37,7 @@ filterInputs.forEach((input) => {
 function renderTodos() {
   list.innerHTML = "";
 
-  let filteredTodos = [];
+  let filteredTodos;
 
   if (state.filter === "completed") {
     filteredTodos = state.todos.filter((todo) => todo.checked);
@@ -54,6 +61,8 @@ function renderTodos() {
     checkbox.addEventListener("change", () => {
       state.todos[index].checked = checkbox.checked;
       updateUncheckedTodoCount();
+
+      sessionStorage.setItem(TODOS_SESSION_KEY, JSON.stringify(state.todos));
     });
 
     list.appendChild(listItem);
@@ -72,4 +81,6 @@ document
     state.todos = state.todos.filter(({ checked }) => !checked);
 
     renderTodos();
+
+    sessionStorage.setItem(TODOS_SESSION_KEY, JSON.stringify(state.todos));
   });
