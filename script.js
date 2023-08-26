@@ -1,8 +1,9 @@
-const TODOS_SESSION_KEY = "todos";
+const JSON_STORAGE_URL = "http://158.129.206.250:4000/api/v1";
+const JSON_STORAGE_KEY = "todos";
+const JSON_STORAGE_TOKEN = "any random string for auth";
 
-const storedTodos = JSON.parse(sessionStorage.getItem(TODOS_SESSION_KEY));
 const state = {
-  todos: storedTodos || [],
+  todos: [],
   filter: "all",
 };
 
@@ -23,7 +24,7 @@ form.addEventListener("submit", (event) => {
   renderTodos();
   updateUncheckedTodoCount();
 
-  sessionStorage.setItem(TODOS_SESSION_KEY, JSON.stringify(state.todos));
+  saveTodosToServer(state.todos);
 });
 
 const filterInputs = document.getElementsByName("filters");
@@ -61,8 +62,7 @@ function renderTodos() {
     checkbox.addEventListener("change", () => {
       state.todos[index].checked = checkbox.checked;
       updateUncheckedTodoCount();
-
-      sessionStorage.setItem(TODOS_SESSION_KEY, JSON.stringify(state.todos));
+      saveTodosToServer(state.todos);
     });
 
     list.appendChild(listItem);
@@ -81,6 +81,44 @@ document
     state.todos = state.todos.filter(({ checked }) => !checked);
 
     renderTodos();
-
-    sessionStorage.setItem(TODOS_SESSION_KEY, JSON.stringify(state.todos));
+    saveTodosToServer(state.todos);
   });
+
+function saveTodosToServer(todos) {
+  fetch(JSON_STORAGE_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      token: JSON_STORAGE_TOKEN,
+    },
+    body: JSON.stringify({
+      [JSON_STORAGE_KEY]: todos,
+    }),
+  }).catch(console.error);
+}
+
+window.addEventListener("load", () => {
+  fetchTodosFromServer();
+});
+
+function fetchTodosFromServer() {
+  fetch(`${JSON_STORAGE_URL}/${JSON_STORAGE_KEY}`, {
+    headers: { token: JSON_STORAGE_TOKEN },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data[JSON_STORAGE_KEY]) {
+        const todosList = data[JSON_STORAGE_KEY];
+        if (Array.isArray(todosList)) {
+          state.todos = todosList;
+          renderTodos();
+          updateUncheckedTodoCount();
+        }
+      }
+    })
+    .catch(console.error);
+}
+
+window.addEventListener("unload", () => {
+  saveTodosToServer(state.todos);
+});
