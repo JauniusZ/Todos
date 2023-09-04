@@ -11,20 +11,7 @@ const form = document.getElementById("todoForm");
 const input = document.getElementById("inputField");
 const list = document.getElementById("list");
 
-window.addEventListener("load", () => {
-  const storedTodos = sessionStorage.getItem(JSON_STORAGE_KEY);
-  if (storedTodos) {
-    state.todos = JSON.parse(storedTodos);
-    renderTodos();
-    updateUncheckedTodoCount();
-  } else {
-    fetchTodosFromServer();
-  }
-});
-
-window.addEventListener("unload", () => {
-  sessionStorage.setItem(JSON_STORAGE_KEY, JSON.stringify(state.todos));
-});
+renderTodos();
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -50,7 +37,9 @@ filterInputs.forEach((input) => {
 
 function renderTodos() {
   list.innerHTML = "";
+
   let filteredTodos;
+
   if (state.filter === "completed") {
     filteredTodos = state.todos.filter((todo) => todo.checked);
   } else if (state.filter === "not_completed") {
@@ -86,11 +75,14 @@ function updateUncheckedTodoCount() {
   todosLeftElement.textContent = `Todos left unchecked: ${uncheckedTodos}`;
 }
 
-document.getElementById("clearCheckedTodosBtn").addEventListener("click", () => {
-  state.todos = state.todos.filter(({ checked }) => !checked);
-  renderTodos();
-  saveTodosToServer(state.todos);
-});
+document
+  .getElementById("clearCheckedTodosBtn")
+  .addEventListener("click", () => {
+    state.todos = state.todos.filter(({ checked }) => !checked);
+
+    renderTodos();
+    saveTodosToServer(state.todos);
+  });
 
 function saveTodosToServer(todos) {
   fetch(JSON_STORAGE_URL, {
@@ -104,6 +96,10 @@ function saveTodosToServer(todos) {
     }),
   }).catch(console.error);
 }
+
+window.addEventListener("load", () => {
+  fetchTodosFromServer();
+});
 
 function fetchTodosFromServer() {
   fetch(`${JSON_STORAGE_URL}/${JSON_STORAGE_KEY}`, {
@@ -122,3 +118,7 @@ function fetchTodosFromServer() {
     })
     .catch(console.error);
 }
+
+window.addEventListener("unload", () => {
+  saveTodosToServer(state.todos);
+});
