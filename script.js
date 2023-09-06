@@ -1,6 +1,7 @@
-const JSON_STORAGE_URL = "http://158.129.206.250:4000/api/v1";
+const JSON_STORAGE_URL = "http://127.0.0.1:4000/api/v1";
 const JSON_STORAGE_KEY = "todos";
 const JSON_STORAGE_TOKEN = "any random string for auth";
+const SESSIONSTORAGE_KEY = "todos";
 
 const state = {
   todos: [],
@@ -11,7 +12,20 @@ const form = document.getElementById("todoForm");
 const input = document.getElementById("inputField");
 const list = document.getElementById("list");
 
-renderTodos();
+window.addEventListener("load", () => {
+  const storedTodos = sessionStorage.getItem(SESSIONSTORAGE_KEY);
+  if (storedTodos) {
+    state.todos = JSON.parse(storedTodos);
+    renderTodos();
+    updateUncheckedTodoCount();
+  } else {
+    fetchTodosFromServer();
+  }
+});
+
+window.addEventListener("unload", () => {
+  saveTodosToServer();
+});
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -24,7 +38,7 @@ form.addEventListener("submit", (event) => {
   renderTodos();
   updateUncheckedTodoCount();
 
-  saveTodosToServer(state.todos);
+  sessionStorage.setItem(SESSIONSTORAGE_KEY, JSON.stringify(state.todos));
 });
 
 const filterInputs = document.getElementsByName("filters");
@@ -37,9 +51,7 @@ filterInputs.forEach((input) => {
 
 function renderTodos() {
   list.innerHTML = "";
-
   let filteredTodos;
-
   if (state.filter === "completed") {
     filteredTodos = state.todos.filter((todo) => todo.checked);
   } else if (state.filter === "not_completed") {
@@ -62,7 +74,7 @@ function renderTodos() {
     checkbox.addEventListener("change", () => {
       state.todos[index].checked = checkbox.checked;
       updateUncheckedTodoCount();
-      saveTodosToServer(state.todos);
+      sessionStorage.setItem(SESSIONSTORAGE_KEY, JSON.stringify(state.todos));
     });
 
     list.appendChild(listItem);
@@ -79,12 +91,11 @@ document
   .getElementById("clearCheckedTodosBtn")
   .addEventListener("click", () => {
     state.todos = state.todos.filter(({ checked }) => !checked);
-
     renderTodos();
-    saveTodosToServer(state.todos);
+    sessionStorage.setItem(SESSIONSTORAGE_KEY, JSON.stringify(state.todos));
   });
 
-function saveTodosToServer(todos) {
+function saveTodosToServer() {
   fetch(JSON_STORAGE_URL, {
     method: "POST",
     headers: {
@@ -92,18 +103,14 @@ function saveTodosToServer(todos) {
       token: JSON_STORAGE_TOKEN,
     },
     body: JSON.stringify({
-      [JSON_STORAGE_KEY]: todos,
+      [JSON_STORAGE_KEY]: state.todos,
     }),
   }).catch(console.error);
 }
 
-window.addEventListener("load", () => {
-  fetchTodosFromServer();
-});
-
 function fetchTodosFromServer() {
   fetch(`${JSON_STORAGE_URL}/${JSON_STORAGE_KEY}`, {
-    headers: { token: JSON_STORAGE_TOKEN },
+    headers: { token: JSON_STORAGE_TOKEN, "Content-Type": "application/json" },
   })
     .then((response) => response.json())
     .then((data) => {
@@ -116,9 +123,7 @@ function fetchTodosFromServer() {
         }
       }
     })
-    .catch(console.error);
+    .catch((error) => {
+      console.error(error);
+    });
 }
-
-window.addEventListener("unload", () => {
-  saveTodosToServer(state.todos);
-});
