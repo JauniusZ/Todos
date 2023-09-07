@@ -1,8 +1,10 @@
-const TODOS_SESSION_KEY = "todos";
+const JSON_STORAGE_URL = "http://127.0.0.1:4000/api/v1";
+const JSON_STORAGE_KEY = "todos";
+const JSON_STORAGE_TOKEN = "any random string for auth";
+const SESSIONSTORAGE_KEY = "todos";
 
-const storedTodos = JSON.parse(sessionStorage.getItem(TODOS_SESSION_KEY));
 const state = {
-  todos: storedTodos || [],
+  todos: [],
   filter: "all",
 };
 
@@ -10,7 +12,20 @@ const form = document.getElementById("todoForm");
 const input = document.getElementById("inputField");
 const list = document.getElementById("list");
 
-renderTodos();
+window.addEventListener("load", () => {
+  const storedTodos = sessionStorage.getItem(SESSIONSTORAGE_KEY);
+  if (storedTodos) {
+    state.todos = JSON.parse(storedTodos);
+    renderTodos();
+    updateUncheckedTodoCount();
+  } else {
+    fetchTodosFromServer();
+  }
+});
+
+window.addEventListener("unload", () => {
+  saveTodosToServer();
+});
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -23,7 +38,7 @@ form.addEventListener("submit", (event) => {
   renderTodos();
   updateUncheckedTodoCount();
 
-  sessionStorage.setItem(TODOS_SESSION_KEY, JSON.stringify(state.todos));
+  sessionStorage.setItem(SESSIONSTORAGE_KEY, JSON.stringify(state.todos));
 });
 
 const filterInputs = document.getElementsByName("filters");
@@ -36,9 +51,7 @@ filterInputs.forEach((input) => {
 
 function renderTodos() {
   list.innerHTML = "";
-
   let filteredTodos;
-
   if (state.filter === "completed") {
     filteredTodos = state.todos.filter((todo) => todo.checked);
   } else if (state.filter === "not_completed") {
@@ -61,8 +74,7 @@ function renderTodos() {
     checkbox.addEventListener("change", () => {
       state.todos[index].checked = checkbox.checked;
       updateUncheckedTodoCount();
-
-      sessionStorage.setItem(TODOS_SESSION_KEY, JSON.stringify(state.todos));
+      sessionStorage.setItem(SESSIONSTORAGE_KEY, JSON.stringify(state.todos));
     });
 
     list.appendChild(listItem);
@@ -79,8 +91,39 @@ document
   .getElementById("clearCheckedTodosBtn")
   .addEventListener("click", () => {
     state.todos = state.todos.filter(({ checked }) => !checked);
-
     renderTodos();
-
-    sessionStorage.setItem(TODOS_SESSION_KEY, JSON.stringify(state.todos));
+    sessionStorage.setItem(SESSIONSTORAGE_KEY, JSON.stringify(state.todos));
   });
+
+function saveTodosToServer() {
+  fetch(JSON_STORAGE_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      token: JSON_STORAGE_TOKEN,
+    },
+    body: JSON.stringify({
+      [JSON_STORAGE_KEY]: state.todos,
+    }),
+  }).catch(console.error);
+}
+
+function fetchTodosFromServer() {
+  fetch(`${JSON_STORAGE_URL}/${JSON_STORAGE_KEY}`, {
+    headers: { token: JSON_STORAGE_TOKEN, "Content-Type": "application/json" },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data[JSON_STORAGE_KEY]) {
+        const todosList = data[JSON_STORAGE_KEY];
+        if (Array.isArray(todosList)) {
+          state.todos = todosList;
+          renderTodos();
+          updateUncheckedTodoCount();
+        }
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
