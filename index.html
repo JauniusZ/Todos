@@ -3,43 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo App</title>
     <link rel="stylesheet" href="style.css" />
-    <script defer src="script.js"></script>
+    <title>Fetch Random TODOS</title>
   </head>
   <body>
-    <div class="container">
-      <h1 class="title">YoYo's Todos</h1>
-    </div>
-    <form id="todoForm">
-      <input
-        type="text"
-        id="inputField"
-        name="inputField"
-        class="todos-input"
-        placeholder="Enter a todo"
-      />
-      <button type="submit" class="submit-btn">Submit</button>
-    </form>
-    <button id="clearCheckedTodosBtn" class="clear-btn">
-      Clear Checked Todos
-    </button>
-    <p class="todos-left" id="todos-left">Todos left unchecked:</p>
-    <h2 class="todos-title">List of todos:</h2>
-    <div id="filters" class="filters">
-      <span>
-        <input type="radio" name="filters" id="option1" value="all" checked />
-        <label for="option1">All</label>
-      </span>
-      <span>
-        <input type="radio" name="filters" id="option2" value="not_completed" />
-        <label for="option2">Not completed</label>
-      </span>
-      <span>
-        <input type="radio" name="filters" id="option3" value="completed" />
-        <label for="option3">Completed</label>
-      </span>
-    </div>
-    <ul class="todos-list" id="list"></ul>
+    <pre></pre>
+    <script>
+      function log(obj) {
+        document.querySelector('pre').textContent = JSON.stringify(
+          obj,
+          null,
+          2,
+        );
+      }
+
+      function randomTodos() {
+        const todos = [];
+        return fetch(
+          `https://baconipsum.com/api/?type=ameat-and-filler&sentences=${Math.floor(
+            Math.random() * 4 + 3,
+          )}`,
+        )
+          .then(response => response.json())
+          .then(data => {
+            data[0].split('.').forEach(title => {
+              const checked = !!Math.round(Math.random() * 0.9);
+              title && todos.push({ title, checked });
+            });
+            return todos;
+          });
+      }
+
+      const todos = randomTodos();
+
+      todos.then(data => log(data)).catch(console.error);
+    </script>
   </body>
 </html>

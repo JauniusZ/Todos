@@ -19,12 +19,8 @@ window.addEventListener("load", () => {
     renderTodos();
     updateUncheckedTodoCount();
   } else {
-    fetchTodosFromServer();
+    randomTodos();
   }
-});
-
-window.addEventListener("unload", () => {
-  saveTodosToServer();
 });
 
 form.addEventListener("submit", (event) => {
@@ -95,35 +91,27 @@ document
     sessionStorage.setItem(SESSIONSTORAGE_KEY, JSON.stringify(state.todos));
   });
 
-function saveTodosToServer() {
-  fetch(JSON_STORAGE_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      token: JSON_STORAGE_TOKEN,
-    },
-    body: JSON.stringify({
-      [JSON_STORAGE_KEY]: state.todos,
-    }),
-  }).catch(console.error);
-}
-
-function fetchTodosFromServer() {
-  fetch(`${JSON_STORAGE_URL}/${JSON_STORAGE_KEY}`, {
-    headers: { token: JSON_STORAGE_TOKEN, "Content-Type": "application/json" },
-  })
+function randomTodos() {
+  const todos = [];
+  return fetch(
+    `https://baconipsum.com/api/?type=ameat-and-filler&sentences=${Math.floor(
+      Math.random() * 4 + 3
+    )}`
+  )
     .then((response) => response.json())
     .then((data) => {
-      if (data[JSON_STORAGE_KEY]) {
-        const todosList = data[JSON_STORAGE_KEY];
-        if (Array.isArray(todosList)) {
-          state.todos = todosList;
-          renderTodos();
-          updateUncheckedTodoCount();
-        }
-      }
-    })
-    .catch((error) => {
-      console.error(error);
+      data[0].split(".").forEach((title) => {
+        const checked = !!Math.round(Math.random() * 0.9);
+        title && todos.push({ title, checked });
+      });
+      return todos;
     });
 }
+
+randomTodos()
+  .then((data) => {
+    state.todos = data;
+    renderTodos();
+    updateUncheckedTodoCount();
+  })
+  .catch(console.error);
