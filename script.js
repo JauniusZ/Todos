@@ -18,6 +18,7 @@ window.addEventListener("load", () => {
     state.todos = JSON.parse(storedTodos);
     renderTodos();
     updateUncheckedTodoCount();
+    g;
   } else {
     randomTodos().then((todos) => {
       state.todos = todos;
@@ -69,17 +70,10 @@ function renderTodos() {
     listItem.appendChild(checkbox);
 
     const titleText = document.createElement("span");
-    titleText.textContent = todo.title;
-    listItem.appendChild(titleText);
-
-    checkbox.addEventListener("change", () => {
-      state.todos[index].checked = checkbox.checked;
-      updateUncheckedTodoCount();
-      sessionStorage.setItem(SESSIONSTORAGE_KEY, JSON.stringify(state.todos));
-    });
-
-    list.appendChild(listItem);
+    g;
   });
+
+  list.appendChild(listItem);
 }
 
 function updateUncheckedTodoCount() {
