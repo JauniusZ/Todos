@@ -69,10 +69,17 @@ function renderTodos() {
     listItem.appendChild(checkbox);
 
     const titleText = document.createElement("span");
-    g;
-  });
+    titleText.textContent = todo.title;
+    listItem.appendChild(titleText);
 
-  list.appendChild(listItem);
+    checkbox.addEventListener("change", () => {
+      state.todos[index].checked = checkbox.checked;
+      updateUncheckedTodoCount();
+      sessionStorage.setItem(SESSIONSTORAGE_KEY, JSON.stringify(state.todos));
+    });
+
+    list.appendChild(listItem);
+  });
 }
 
 function updateUncheckedTodoCount() {
