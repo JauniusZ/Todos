@@ -18,7 +18,6 @@ window.addEventListener("load", () => {
     state.todos = JSON.parse(storedTodos);
     renderTodos();
     updateUncheckedTodoCount();
-    g;
   } else {
     randomTodos().then((todos) => {
       state.todos = todos;
