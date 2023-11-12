@@ -53,9 +53,9 @@ filterInputs.forEach((input) => {
 function renderTodos() {
   list.innerHTML = "";
   let filteredTodos;
-  if (state.filter === "completed") {
+  if (state.filter === "checked") {
     filteredTodos = state.todos.filter((todo) => todo.checked);
-  } else if (state.filter === "not_completed") {
+  } else if (state.filter === "unchecked") {
     filteredTodos = state.todos.filter((todo) => !todo.checked);
   } else {
     filteredTodos = state.todos;
@@ -85,7 +85,7 @@ function renderTodos() {
 function updateUncheckedTodoCount() {
   const uncheckedTodos = state.todos.filter((todo) => !todo.checked).length;
   const todosLeftElement = document.getElementById("todos-left");
-  todosLeftElement.textContent = `Todos left unchecked: ${uncheckedTodos}`;
+  todosLeftElement.textContent = uncheckedTodos;
 }
 
 document

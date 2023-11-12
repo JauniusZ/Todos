@@ -15,27 +15,22 @@
       <div class="tools">
         <div id="filters" class="filters">
           <span>
+            <input type="radio" name="filters" id="option1" value="unchecked" />
+            <label for="option1">unchecked</label>
+          </span>
+          <span>
+            <input type="radio" name="filters" id="option2" value="checked" />
+            <label for="option3">checked</label>
+          </span>
+          <span>
             <input
               type="radio"
               name="filters"
-              id="option1"
+              id="option3"
               value="all"
               checked
             />
-            <label for="option1">All</label>
-          </span>
-          <span>
-            <input
-              type="radio"
-              name="filters"
-              id="option2"
-              value="not_completed"
-            />
-            <label for="option2">Not completed</label>
-          </span>
-          <span>
-            <input type="radio" name="filters" id="option3" value="completed" />
-            <label for="option3">Completed</label>
+            <label for="option3">all</label>
           </span>
         </div>
         <form id="todoForm">
@@ -46,12 +41,17 @@
             class="todos-input"
             placeholder="Enter a todo"
           />
-          <button type="submit" class="submit-btn">Submit</button>
+          <button type="submit" class="submit-btn">Add TODO</button>
         </form>
-        <p class="todos-left" id="todos-left">Todos left unchecked:</p>
-        <button id="clearCheckedTodosBtn" class="clear-btn">
-          Clear Checked Todos
-        </button>
+        <div class="todos-left">
+          <span id="todos-left" class="count-box"></span>
+          <p>Todos left unchecked</p>
+        </div>
+        <div class="clear-btn-container">
+          <button id="clearCheckedTodosBtn" class="clear-btn">
+            Clear Checked
+          </button>
+        </div>
       </div>
       <ul class="todos-list" id="list"></ul>
     </div>
