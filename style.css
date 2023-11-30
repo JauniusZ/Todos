@@ -12,9 +12,9 @@ body {
 }
 
 ul {
-  margin: 0;
   padding: 0;
   list-style-type: none;
+  margin: 14px 0 0 0;
 }
 
 h1,
@@ -31,7 +31,6 @@ button {
 
 .container {
   font-family: var(--ff-standard);
-  border: solid 14px var(--clr-light);
   width: 776px;
   margin-top: 50px;
   margin-inline: auto;
@@ -39,6 +38,7 @@ button {
   display: flex;
   flex-direction: column;
   background-color: var(--clr-light);
+  padding: 14px;
 
   --inp-h: 20px;
 }
@@ -54,11 +54,15 @@ button {
 .tools {
   display: flex;
   background: var(--clr-dark);
-  height: 47px;
+  height: calc(47px - (2 * 5px));
   padding: 5px;
   font-size: 13px;
   font-weight: 700;
 }
+
+/* .tools >* {
+  margin: 5px;
+} */
 
 .tools form {
   flex: 10;
@@ -75,30 +79,55 @@ button {
   width: 245px;
 }
 
+.todos-input::placeholder {
+  color: rgba(15, 63, 87, 0.5);
+  padding-left: 2px;
+}
+
 .todos-list {
   display: flex;
   flex-direction: column;
-  padding-top: 14px;
+  gap: 3px;
+}
+
+.todos-list input[type="checkbox"] {
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border: solid 1px var(--clr-dark);
+}
+
+.todos-list input:hover {
+  color: var(--clr-light);
+  background-color: var(--clr-dark);
+}
+
+.todos-list input[type="checkbox"]:checked::before {
+  content: "X";
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: var(--clr-light);
+  background-color: var(--clr-dark);
+}
+
+.todos-list input[type="checkbox"]:checked:hover::before {
   background-color: var(--clr-light);
-  flex: 3;
+  color: var(--clr-dark);
 }
 
 .todos-list li {
-  display: flex;
-  align-items: start;
-  font-size: 13px;
-  padding-left: 3px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px;
 }
 
 .todos-list span {
   background-color: var(--clr-dark);
-  width: 100%;
-  padding-left: 3px;
-}
-
-.todos-input::placeholder {
-  color: rgba(15, 63, 87, 0.5);
-  padding-left: 2px;
+  padding-inline: 3px;
+  font-size: 13px;
+  line-height: 20px;
 }
 
 .todos-left {
@@ -125,6 +154,10 @@ button {
   display: flex;
   flex-direction: column;
   align-items: start;
+}
+
+.filters span:hover {
+  --_clr-flt-bg: var(--clr-light);
 }
 
 .filters label {
@@ -169,7 +202,10 @@ button {
   width: 107px;
 }
 
-.clear-btn-container {
+.submit-btn:hover {
+  background-color: var(--clr-dark);
+  color: var(--clr-light);
+  border: solid 1px var(--clr-light);
 }
 
 .clear-btn {
@@ -178,3 +214,10 @@ button {
   height: var(--inp-h);
   width: 107px;
 }
+
+.clear-btn:hover {
+  background-color: var(--clr-dark);
+  color: var(--clr-light);
+  border: solid 1px var(--clr-light);
+}
+
