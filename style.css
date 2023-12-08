@@ -118,8 +118,7 @@ button {
 }
 
 .todos-list li {
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex;
   gap: 3px;
 }
 
@@ -128,6 +127,15 @@ button {
   padding-inline: 3px;
   font-size: 13px;
   line-height: 20px;
+}
+
+.todos-list span.title-text {
+  flex: 1;
+}
+
+.delete-button {
+  width: 20px;
+  height: 20px;
 }
 
 .todos-left {

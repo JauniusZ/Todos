@@ -63,7 +63,6 @@ function renderTodos() {
 
   filteredTodos.forEach((todo, index) => {
     const listItem = document.createElement("li");
-    listItem.style.display = "flex";
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -72,15 +71,14 @@ function renderTodos() {
 
     const titleText = document.createElement("span");
     titleText.textContent = todo.title;
-    titleText.style.flex = "1";
+    titleText.classList.add("title-text");
     listItem.appendChild(titleText);
 
     const deleteButton = document.createElement("img");
     deleteButton.src =
       "https://pluspng.com/img-png/delete-button-png-delete-icon-1600.png";
     deleteButton.alt = "Delete";
-    deleteButton.style.width = "20px";
-    deleteButton.style.height = "20px";
+    deleteButton.classList.add("delete-button");
     listItem.appendChild(deleteButton);
 
     checkbox.addEventListener("change", () => {
@@ -90,7 +88,9 @@ function renderTodos() {
     });
 
     deleteButton.addEventListener("click", () => {
-      state.todos.splice(index, 1);
+      const newTodos = [...state.todos];
+      newTodos.splice(index, 1);
+      state.todos = newTodos;
       renderTodos();
       updateUncheckedTodoCount();
       sessionStorage.setItem(SESSIONSTORAGE_KEY, JSON.stringify(state.todos));
