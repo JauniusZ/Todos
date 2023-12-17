@@ -1,6 +1,3 @@
-const JSON_STORAGE_URL = "http://127.0.0.1:4000/api/v1";
-const JSON_STORAGE_KEY = "todos";
-const JSON_STORAGE_TOKEN = "any random string for auth";
 const SESSIONSTORAGE_KEY = "todos";
 
 const state = {
